@@ -23,6 +23,10 @@ byte ledPin = 13;   // the onboard LED
 #define BAUD            9600    // Frequency of Serial Transmission
 #define UPDATE_PERIODE  100     // Periode (ms) send general state
 
+#define COM_FREQUENCY   1000    // Frequency (Hz) of communication (read and write in serial message)
+
+
+
 #define LED_pin         2
 #define LED_errorPin    3
 
@@ -62,6 +66,8 @@ void timerCallback();
 void sendMsg();
 void readMsg();
 void serialEvent();
+
+void manageSerialCom();
 
 
 /*------------------------- Main function -------------------------*/
@@ -192,15 +198,35 @@ void loop() {
     }
     delay(20);
     */
+
+    /*
     if(shouldRead_){
         readMsg();
     }
+
     if(shouldSend_){
         sendMsg();
     }
+    */
+    //Serial.println("arduino loop");
+
+    manageSerialCom();
 }
 
 /*------------------- Function definitions ----------------------*/
+
+void manageSerialCom(){
+
+    if (Serial.available() > 0){
+        readMsg();
+
+        while (Serial.available() > 0){
+            delay(10);
+        }
+        sendMsg();
+    }
+
+}
 
 void serialEvent(){shouldRead_ = true;}
 
@@ -212,7 +238,7 @@ void sendMsg(){
 
 
     // Message Elements
-
+    /*
     doc["LeftJoystickX"]    = LeftJoystickX_    ;
     doc["LeftJoystickY"]    = LeftJoystickY_    ;
     doc["RightJoystickX_"]  = RightJoystickX_   ;
@@ -221,10 +247,14 @@ void sendMsg(){
     doc["RightTrigger"]     = RightTrigger_     ;
     doc["LeftBumper"]       = LeftBumper_       ;
     doc["RightBumper"]      = RightBumper_      ;
+    */
+
     doc["AButton"]          = AButton_          ;
     doc["BButton"]          = BButton_          ;
     doc["XButton"]          = XButton_          ;
     doc["YButton"]          = YButton_          ;
+
+    /*
     doc["LeftThumb"]        = LeftThumb_        ;
     doc["RightThumb"]       = RightThumb_       ;
     doc["LeftDpad"]         = LeftDpad_         ;
@@ -233,6 +263,7 @@ void sendMsg(){
     doc["DownDpad"]         = DownDpad_         ;
     doc["BackButton"]       = BackButton_       ;
     doc["StartButton"]      = StartButton_      ;
+    */
 
     // Serialisation
     serializeJson(doc, Serial);
@@ -260,6 +291,8 @@ void readMsg(){
     }
 
     // Message analysis
+
+    /*
     parse_msg = doc["LeftJoystickX"];
     if(!parse_msg.isNull()){
         LeftJoystickX_ = doc["LeftJoystickX"].as<float>();
@@ -299,7 +332,7 @@ void readMsg(){
     if(!parse_msg.isNull()){
         RightBumper_ = doc["RightBumper"].as<bool>();
     }
-
+    */
     parse_msg = doc["AButton"];
     if(!parse_msg.isNull()){
         AButton_ = doc["AButton"].as<bool>();
@@ -319,7 +352,7 @@ void readMsg(){
     if(!parse_msg.isNull()){
         YButton_ = doc["YButton"].as<bool>();
     }
-
+    /*
     parse_msg = doc["LeftThumb"];
     if(!parse_msg.isNull()){
         LeftThumb_ = doc["LeftThumb"].as<bool>();
@@ -359,6 +392,7 @@ void readMsg(){
     if(!parse_msg.isNull()){
         StartButton_ = doc["StartButton"].as<bool>();
     }
+    */
 }
 
 //===============
