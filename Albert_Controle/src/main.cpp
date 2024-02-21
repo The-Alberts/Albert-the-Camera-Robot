@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 #include <ArduinoJson.h>
+#include <Servo.h>
 
 
 
@@ -26,7 +27,7 @@ byte ledPin = 13;   // the onboard LED
 #define COM_FREQUENCY   1000    // Frequency (Hz) of communication (read and write in serial message)
 
 
-
+#define PIN_PPM         5
 #define LED_pin         2
 #define LED_errorPin    3
 
@@ -34,6 +35,9 @@ byte ledPin = 13;   // the onboard LED
 
 volatile bool shouldSend_ = false;  // flag ready to send
 volatile bool shouldRead_ = false;  // flag ready to read
+
+Servo motor1;
+float range;
 
 // Xbox Controller input variables
 float LeftJoystickX_    = 0;
@@ -84,6 +88,7 @@ void setup() {
 
     Serial.println("<Arduino is ready>");*/
 
+    motor1.attach(PIN_PPM);
 
     Serial.begin(BAUD) ;                // serial communication initialisation
     
@@ -211,6 +216,19 @@ void loop() {
     //Serial.println("arduino loop");
 
     manageSerialCom();
+
+    /*
+    if (AButton_ == true)
+        motor1.writeMicroseconds(1750); //forward
+    else if (BButton_ == true)
+        motor1.writeMicroseconds(1250); //backward
+    else
+        motor1.writeMicroseconds(1500); //stop
+    */
+
+    range = (500 * RightTrigger_) + 1500 ;
+    motor1.writeMicroseconds(range);
+
 }
 
 /*------------------- Function definitions ----------------------*/
@@ -244,11 +262,12 @@ void sendMsg(){
     doc["RightJoystickX_"]  = RightJoystickX_   ;
     doc["RightJoystickY_"]  = RightJoystickX_   ;
     doc["LeftTrigger"]      = LeftTrigger_      ;
-    doc["RightTrigger"]     = RightTrigger_     ;
+    */
+    doc["RightTrigger"]     = range     ;   //RightTrigger_
+    /*
     doc["LeftBumper"]       = LeftBumper_       ;
     doc["RightBumper"]      = RightBumper_      ;
     */
-
     doc["AButton"]          = AButton_          ;
     doc["BButton"]          = BButton_          ;
     doc["XButton"]          = XButton_          ;
@@ -317,12 +336,13 @@ void readMsg(){
     if(!parse_msg.isNull()){
         LeftTrigger_ = doc["LeftTrigger"].as<float>();
     }
-
+    */
+   
     parse_msg = doc["RightTrigger"];
     if(!parse_msg.isNull()){
         RightTrigger_ = doc["RightTrigger"].as<float>();
     }
-
+    /*
     parse_msg = doc["LeftBumper"];
     if(!parse_msg.isNull()){
         LeftBumper_ = doc["LeftBumper"].as<bool>();
