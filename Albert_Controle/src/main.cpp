@@ -256,24 +256,24 @@ void sendMsg(){
 
 
     // Message Elements
-    /*
+    
     doc["LeftJoystickX"]    = LeftJoystickX_    ;
-    doc["LeftJoystickY"]    = LeftJoystickY_    ;
-    doc["RightJoystickX_"]  = RightJoystickX_   ;
+    //doc["LeftJoystickY"]    = LeftJoystickY_    ;
+    //doc["RightJoystickX_"]  = RightJoystickX_   ;
     doc["RightJoystickY_"]  = RightJoystickX_   ;
     doc["LeftTrigger"]      = LeftTrigger_      ;
-    */
+    
     doc["RightTrigger"]     = range     ;   //RightTrigger_
+    
     /*
     doc["LeftBumper"]       = LeftBumper_       ;
     doc["RightBumper"]      = RightBumper_      ;
-    */
+    
     doc["AButton"]          = AButton_          ;
     doc["BButton"]          = BButton_          ;
     doc["XButton"]          = XButton_          ;
     doc["YButton"]          = YButton_          ;
 
-    /*
     doc["LeftThumb"]        = LeftThumb_        ;
     doc["RightThumb"]       = RightThumb_       ;
     doc["LeftDpad"]         = LeftDpad_         ;
@@ -281,8 +281,9 @@ void sendMsg(){
     doc["UpDpad"]           = UpDpad_           ;
     doc["DownDpad"]         = DownDpad_         ;
     doc["BackButton"]       = BackButton_       ;
-    doc["StartButton"]      = StartButton_      ;
     */
+    doc["StartButton"]      = StartButton_      ;
+    
 
     // Serialisation
     serializeJson(doc, Serial);
