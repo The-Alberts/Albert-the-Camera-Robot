@@ -312,12 +312,12 @@ void readMsg(){
 
     // Message analysis
 
-    /*
+    
     parse_msg = doc["LeftJoystickX"];
     if(!parse_msg.isNull()){
         LeftJoystickX_ = doc["LeftJoystickX"].as<float>();
     }
-
+    /*
     parse_msg = doc["LeftJoystickY"];
     if(!parse_msg.isNull()){
         LeftJoystickY_ = doc["LeftJoystickY"].as<float>();
@@ -327,7 +327,7 @@ void readMsg(){
     if(!parse_msg.isNull()){
         RightJoystickX_ = doc["RightJoystickX"].as<float>();
     }
-
+    */
     parse_msg = doc["RightJoystickY"];
     if(!parse_msg.isNull()){
         RightJoystickY_ = doc["RightJoystickY"].as<float>();
@@ -337,8 +337,7 @@ void readMsg(){
     if(!parse_msg.isNull()){
         LeftTrigger_ = doc["LeftTrigger"].as<float>();
     }
-    */
-   
+    
     parse_msg = doc["RightTrigger"];
     if(!parse_msg.isNull()){
         RightTrigger_ = doc["RightTrigger"].as<float>();
@@ -353,7 +352,8 @@ void readMsg(){
     if(!parse_msg.isNull()){
         RightBumper_ = doc["RightBumper"].as<bool>();
     }
-    */
+
+    
     parse_msg = doc["AButton"];
     if(!parse_msg.isNull()){
         AButton_ = doc["AButton"].as<bool>();
@@ -373,7 +373,7 @@ void readMsg(){
     if(!parse_msg.isNull()){
         YButton_ = doc["YButton"].as<bool>();
     }
-    /*
+    
     parse_msg = doc["LeftThumb"];
     if(!parse_msg.isNull()){
         LeftThumb_ = doc["LeftThumb"].as<bool>();
@@ -408,12 +408,12 @@ void readMsg(){
     if(!parse_msg.isNull()){
         BackButton_ = doc["BackButton"].as<bool>();
     }
-
+    */
     parse_msg = doc["StartButton"];
     if(!parse_msg.isNull()){
         StartButton_ = doc["StartButton"].as<bool>();
     }
-    */
+    
 }
 
 //===============
