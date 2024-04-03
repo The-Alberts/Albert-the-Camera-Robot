@@ -22,10 +22,6 @@ byte ledPin = 13;   // the onboard LED
 /*--------------------------- Constantes ----------------------------*/
 
 #define BAUD            9600    // Frequency of Serial Transmission
-#define UPDATE_PERIODE  100     // Periode (ms) send general state
-
-#define COM_FREQUENCY   1000    // Frequency (Hz) of communication (read and write in serial message)
-
 
 #define PIN_PPM         5
 #define LED_pin         2
@@ -37,7 +33,8 @@ volatile bool shouldSend_ = false;  // flag ready to send
 volatile bool shouldRead_ = false;  // flag ready to read
 
 Servo motor1;
-float range;
+Servo motor2;
+Servo motor3;
 
 // Xbox Controller input variables
 float LeftJoystickX_    = 0;
@@ -62,8 +59,6 @@ bool  BackButton_       = 0;
 bool  StartButton_      = 0;
 
 
-//SoftTimer timerSendMsg_;            // time it took for the message to be sent
-
 /*------------------------- Function prototypes -------------------------*/
 
 void timerCallback();
@@ -72,166 +67,63 @@ void readMsg();
 void serialEvent();
 
 void manageSerialCom();
+void manageMotors();
 
 
 /*------------------------- Main function -------------------------*/
 
 void setup() {
-    /*Serial.begin(115200);
-
-    pinMode(ledPin, OUTPUT);
-    digitalWrite(ledPin, HIGH);
-    delay(200);
-    digitalWrite(ledPin, LOW);
-    delay(200);
-    digitalWrite(ledPin, HIGH);
-
-    Serial.println("<Arduino is ready>");*/
 
     motor1.attach(PIN_PPM);
 
     Serial.begin(BAUD) ;                // serial communication initialisation
     
-    // message timer
-    /*
-    timerSendMsg_.setDelay(UPDATE_PERIODE);
-    timerSendMsg_.setCallback(timerCallback);
-    timerSendMsg_.enable();
-    */
-
-    //Serial.setTimeout(1) ;
-
-    //pinMode(LED_pin, OUTPUT) ;
-    //pinMode(LED_errorPin, OUTPUT) ;
-
     while(!Serial) {
     }
 }
 
-//===============
-/*
-void recvWithStartEndMarkers() {
-    static boolean recvInProgress = false;
-    static byte ndx = 0;
-    char startMarker = '<';
-    char endMarker = '>';
-    char rc;
-
-    while (Serial.available() > 0 && newData == false) {
-        rc = Serial.read();
-
-        if (recvInProgress == true) {
-            if (rc != endMarker) {
-                receivedChars[ndx] = rc;
-                ndx++;
-                if (ndx >= numChars) {
-                    ndx = numChars - 1;
-                }
-            }
-            else {
-                receivedChars[ndx] = '\0'; // terminate the string
-                recvInProgress = false;
-                ndx = 0;
-                newData = true;
-            }
-        }
-
-        else if (rc == startMarker) {
-            recvInProgress = true;
-        }
-    }
-}
-*/
-//===============
-/*
-void replyToPython() {
-    if (newData == true) {
-        Serial.print("<This just in ... ");
-        Serial.print(receivedChars);
-        Serial.print("   ");
-        Serial.print(millis());
-        Serial.print('>');
-            // change the state of the LED everytime a reply is sent
-        digitalWrite(ledPin, ! digitalRead(ledPin));
-        newData = false;
-    }
-}
-*/
-//===============
 
 void loop() {
-    
-    //recvWithStartEndMarkers();
-    //replyToPython();
-    /*
-    if (Serial.available() > 0){
-        float msg = Serial.read() ;
-        Serial.println(msg);
-    
-
-        if (msg == "ON"){
-            digitalWrite(LED_pin,HIGH) ;
-        }else if (msg == "OFF"){
-            digitalWrite(LED_pin,LOW) ;
-        }else{
-            digitalWrite(LED_errorPin, HIGH);
-            delay(100);
-            digitalWrite(LED_errorPin, LOW);
-        }
-
-    }
-    */
-   /*
-   //----------------------------test------------------------//
-    int size_ = 0;
-    String payload;
-    while (!Serial.available() ){}
-    if ( Serial.available() )
-        payload = Serial.readStringUntil('\n');
-    StaticJsonDocument<512> doc;
-
-    DeserializationError error = deserializeJson(doc, payload);
-    if (error) {
-        Serial.println(error.c_str());
-        return;
-    }
-    if (doc["operation"] == "sequence") {
-        Serial.println("{\"Success\":\"True\"}");
-    }
-    else {
-        Serial.println("{\"Success\":\"False\"}");
-    }
-    delay(20);
-    */
-
-    /*
-    if(shouldRead_){
-        readMsg();
-    }
-
-    if(shouldSend_){
-        sendMsg();
-    }
-    */
-    //Serial.println("arduino loop");
 
     manageSerialCom();
 
-    /*
-    if (AButton_ == true)
-        motor1.writeMicroseconds(1750); //forward
-    else if (BButton_ == true)
-        motor1.writeMicroseconds(1250); //backward
-    else
-        motor1.writeMicroseconds(1500); //stop
-    */
 
-    range = (500 * RightTrigger_) + 1500 ;
-    motor1.writeMicroseconds(range);
+    manageMotors(motor1,RightTrigger_,LeftTrigger_,1250,2000,1500);
 
+    manageMotors(motor2,LeftJoystickX_,1250,2000,1500);
+
+    manageMotors(motor3,RightJoystickY_,1250,2000,1500);
 }
 
 /*------------------- Function definitions ----------------------*/
+
+void manageMotors(Servo motor,float inputUp,float inputDown, int minRange, int maxRange, int midRange){
+
+    float range;
+
+    if(inputUp>=inputDown)
+    {
+        range = ((maxRange-midRange) * inputUp) + midRange ;  
+    }else{
+        range = midRange-((midRange-minRange) * inputDown);
+    }
+
+    motor.writeMicroseconds(range);
+}
+
+void manageMotors(Servo motor,float input, int minRange, int maxRange, int midRange){
+
+    float range;
+
+    if(input>=0)
+    {
+        range = ((maxRange-midRange) * input) + midRange ;  
+    }else{
+        range = midRange-((midRange-minRange) * input);
+    }
+
+    motor.writeMicroseconds(range);
+}
 
 void manageSerialCom(){
 
@@ -260,11 +152,9 @@ void sendMsg(){
     doc["LeftJoystickX"]    = LeftJoystickX_    ;
     //doc["LeftJoystickY"]    = LeftJoystickY_    ;
     //doc["RightJoystickX_"]  = RightJoystickX_   ;
-    doc["RightJoystickY_"]  = RightJoystickX_   ;
+    doc["RightJoystickY_"]  = RightJoystickY_   ;
     doc["LeftTrigger"]      = LeftTrigger_      ;
-    
-    doc["RightTrigger"]     = range     ;   //RightTrigger_
-    
+    doc["RightTrigger"]     = RightTrigger_     ;   
     /*
     doc["LeftBumper"]       = LeftBumper_       ;
     doc["RightBumper"]      = RightBumper_      ;
@@ -280,9 +170,11 @@ void sendMsg(){
     doc["RightDpad"]        = RightDpad_        ;
     doc["UpDpad"]           = UpDpad_           ;
     doc["DownDpad"]         = DownDpad_         ;
-    doc["BackButton"]       = BackButton_       ;
     */
-    doc["StartButton"]      = StartButton_      ;
+
+    doc["BackButton"]       = BackButton_       ;
+
+    //doc["StartButton"]      = StartButton_      ;
     
 
     // Serialisation
@@ -312,7 +204,6 @@ void readMsg(){
 
     // Message analysis
 
-    
     parse_msg = doc["LeftJoystickX"];
     if(!parse_msg.isNull()){
         LeftJoystickX_ = doc["LeftJoystickX"].as<float>();
@@ -403,16 +294,19 @@ void readMsg(){
     if(!parse_msg.isNull()){
         DownDpad_ = doc["DownDpad"].as<bool>();
     }
-
+    */
     parse_msg = doc["BackButton"];
     if(!parse_msg.isNull()){
         BackButton_ = doc["BackButton"].as<bool>();
     }
-    */
+    
+   /*
     parse_msg = doc["StartButton"];
     if(!parse_msg.isNull()){
         StartButton_ = doc["StartButton"].as<bool>();
     }
+   */
+
     
 }
 
