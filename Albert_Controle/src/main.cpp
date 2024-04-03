@@ -23,9 +23,11 @@ byte ledPin = 13;   // the onboard LED
 
 #define BAUD            9600    // Frequency of Serial Transmission
 
-#define PIN_PPM         5
-#define LED_pin         2
-#define LED_errorPin    3
+#define PIN_MOT1         5
+#define PIN_MOT2         6
+#define PIN_MOT3         7
+
+
 
 /*------------------------- Globale variables -------------------------*/
 
@@ -67,14 +69,19 @@ void readMsg();
 void serialEvent();
 
 void manageSerialCom();
-void manageMotors();
+void manageMotors(Servo motor,float inputUp,float inputDown, int minRange, int maxRange, int midRange);
+void manageMotors(Servo motor,float input, int minRange, int maxRange, int midRange);
+
+
 
 
 /*------------------------- Main function -------------------------*/
 
 void setup() {
 
-    motor1.attach(PIN_PPM);
+    motor1.attach(PIN_MOT1);
+    motor2.attach(PIN_MOT2);
+    motor3.attach(PIN_MOT3);
 
     Serial.begin(BAUD) ;                // serial communication initialisation
     
@@ -171,7 +178,6 @@ void sendMsg(){
     doc["UpDpad"]           = UpDpad_           ;
     doc["DownDpad"]         = DownDpad_         ;
     */
-
     doc["BackButton"]       = BackButton_       ;
 
     //doc["StartButton"]      = StartButton_      ;
