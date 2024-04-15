@@ -1,4 +1,6 @@
 The Electrical wiring is fairly simple (simply see the electrical diagram file)
+![CircuitElectrique Albert](https://github.com/The-Alberts/Albert-the-Camera-Robot/assets/12099576/729223aa-ec98-4ca2-b675-46d61cb3094b)
+
 Here are the components :
 
 You will also need two powersources - 1x 12V 6A - 1x 48V 20A
