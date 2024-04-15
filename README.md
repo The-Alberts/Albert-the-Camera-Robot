@@ -13,4 +13,5 @@ Many fonctionalities are planned :
 
 For more information, please go to the appropriate folders and the README in the appropriate folder : Electrical, CAD, Manufacturing, etc.
 
-Signed, The creators of Albert
+For the MCU code, see [here](https://github.com/The-Alberts/Albert-the-Camera-Robot-MCU).
+For the UI code, see [here](https://github.com/The-Alberts/Albert-the-Camera-Robot-UI/).
