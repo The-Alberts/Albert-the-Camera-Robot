@@ -11,7 +11,7 @@ Many fonctionalities are planned :
 - Position and video control with an XBOX Controller
 - Security implementation
 
-For more information, please go to the appropriate folders and the README in the appropriate folder : Electrical, CAD, Manufacturing, etc.
+For more specific information, please go in the appropriate subfolders and access the README.
 
 For the MCU code, see [here](https://github.com/The-Alberts/Albert-the-Camera-Robot-MCU).
 For the UI code, see [here](https://github.com/The-Alberts/Albert-the-Camera-Robot-UI/).
