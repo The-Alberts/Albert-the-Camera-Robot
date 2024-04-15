@@ -9,6 +9,6 @@ Many fonctionalities are planned :
 - Position and video control with an XBOX Controller
 - Security implementation
 
-For more information, please go to the appropriate folders : Electrical, CAD, Manufacturing, etc.
+For more information, please go to the appropriate folders and the README in the appropriate folder : Electrical, CAD, Manufacturing, etc.
 
 Signed, The Alberts
